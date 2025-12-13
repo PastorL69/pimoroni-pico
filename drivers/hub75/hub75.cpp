@@ -149,7 +149,7 @@ void Hub75::start(irq_handler_t handler) {
             FM6126A_setup();
         }
 
-        uint latch_cycles = clock_get_hz(clk_sys) / 3500000;
+        uint latch_cycles = clock_get_hz(clk_sys) / 4000000;
 
         // Claim the PIO so we can clean it upon soft restart
         pio_claim_free_sm_and_add_program_for_gpio_range(&hub75_data_rgb888_program, &pio, &sm_data,
