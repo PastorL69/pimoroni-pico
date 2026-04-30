@@ -171,8 +171,23 @@ void Hub75::start(irq_handler_t handler) {
         hub75_data_rgb888_program_init(pio, sm_data, data_prog_offs, DATA_BASE_PIN, pin_clk);
         hub75_row_program_init(pio, sm_row, row_prog_offs, ROWSEL_BASE_PIN, ROWSEL_N_PINS, pin_stb, latch_cycles);
 
-        // Prevent flicker in Python caused by the smaller dataset just blasting through the PIO too quickly
-        pio_sm_set_clkdiv(pio, sm_data, width <= 32 ? 2.0f : 2.0f);
+        uint32_t sys_hz = clock_get_hz(clk_sys);  // e.g. 125/200/266 MHz
+        float target_hz = 100000000.0f;           // PIO code designed for 100 MHz (128 pixels wide)
+
+        if (width <= 128) {
+            target_hz *= 1.0f;
+        } 
+        else if (width <= 192) {
+            target_hz *= 1.5f;
+        } 
+        else if (width <= 256) {
+            target_hz *= 2.0f;
+        }
+
+        float pio_clkdiv = (float)sys_hz / target_hz;  // scales automatically
+        
+        // Prevent ghosting by blasting through the PIO too quickly
+        pio_sm_set_clkdiv(pio, sm_data, pio_clkdiv);
 
         dma_channel = dma_claim_unused_channel(true);
         dma_channel_config config = dma_channel_get_default_config(dma_channel);
