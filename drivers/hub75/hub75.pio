@@ -20,8 +20,11 @@
 .side_set 2
 
 .wrap_target
-    out pins, 5 [2]    side 0x2 ; Deassert OEn, output row select
-    out x, 27   [14]   side 0x3 ; Get OEn pulse width
+    out pins, 5 [1]    side 0x2 ; Deassert OEn, output row select
+    mov x, y    [3]    side 0x3 ; Pulse LATCH
+wait_loop:
+    jmp x-- wait_loop  side 0x2 ; Wait for row to latch
+    out x, 27          side 0x2 ; Get OEn pulse width
 pulse_loop:
     jmp x-- pulse_loop side 0x0 ; Assert OEn for x+1 cycles
 .wrap
@@ -42,8 +45,11 @@ pulse_loop:
 .side_set 2
 
 .wrap_target
-    out pins, 5 [2]    side 0x3 ; Deassert OEn, output row select
-    out x, 27   [14]   side 0x3 ; Get OEn pulse width
+    out pins, 5 [1]    side 0x3 ; Deassert OEn, output row select
+    mov x, y    [3]    side 0x2 ; Pulse LATCH
+wait_loop:
+    jmp x-- wait_loop  side 0x3 ; Wait for row to latch
+    out x, 27          side 0x3 ; Get OEn pulse width
 pulse_loop:
     jmp x-- pulse_loop side 0x1 ; Assert OEn for x+1 cycles
 .wrap
