@@ -172,7 +172,7 @@ void Hub75::start(irq_handler_t handler) {
         hub75_row_program_init(pio, sm_row, row_prog_offs, ROWSEL_BASE_PIN, ROWSEL_N_PINS, pin_stb, latch_cycles);
 
         uint32_t sys_hz = clock_get_hz(clk_sys);  // e.g. 125/200/266 MHz
-        float target_hz = 50000000.0f;            // PIO code fine tuned with a 128 pixel wide setup
+        float target_hz = 100000000.0f;            // PIO code fine tuned with a 128 pixel wide setup
 
         if (width <= 128) {
             target_hz *= 1.0f;
@@ -188,6 +188,7 @@ void Hub75::start(irq_handler_t handler) {
 
         // Prevent ghosting by blasting through the PIO too quickly
         pio_sm_set_clkdiv(pio, sm_data, pio_clkdiv <= 1.0f ? 1.0f : pio_clkdiv);
+        pio_sm_set_clkdiv(pio, sm_row, pio_clkdiv <= 1.0f ? 1.0f : pio_clkdiv);
 
         dma_channel = dma_claim_unused_channel(true);
         dma_channel_config config = dma_channel_get_default_config(dma_channel);
