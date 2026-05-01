@@ -185,9 +185,9 @@ void Hub75::start(irq_handler_t handler) {
         }
 
         float pio_clkdiv = (float)sys_hz / target_hz;  // scales automatically
-        
+
         // Prevent ghosting by blasting through the PIO too quickly
-        pio_sm_set_clkdiv(pio, sm_data, pio_clkdiv);
+        pio_sm_set_clkdiv(pio, sm_data, pio_clkdiv <= 1.0f ? 1.0f : pio_clkdiv);
 
         dma_channel = dma_claim_unused_channel(true);
         dma_channel_config config = dma_channel_get_default_config(dma_channel);
