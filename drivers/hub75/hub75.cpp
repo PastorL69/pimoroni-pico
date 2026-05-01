@@ -47,14 +47,9 @@ Hub75::Hub75(uint width, uint height, Pixel *buffer, PanelType panel_type, bool 
     }
 
     if (brightness == 0) {
-#if PICO_RP2350
-        brightness = 6;
-#else
-        if (width >= 64) brightness = 6;
-        if (width >= 96) brightness = 3;
-        if (width >= 128) brightness = 2;
-        if (width >= 160) brightness = 1;
-#endif
+        if (width >= 128) brightness = 3;
+        if (width >= 192) brightness = 2;
+        if (width >= 256) brightness = 1;
     }
 
     switch (color_order) {

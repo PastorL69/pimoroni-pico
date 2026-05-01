@@ -68,9 +68,8 @@ static inline void hub75_row_program_init(PIO pio, uint sm, uint offset, uint ro
     sm_config_set_sideset_pins(&c, latch_base_pin);
     sm_config_set_out_shift(&c, true, true, 32);
     pio_sm_init(pio, sm, offset, &c);
-    pio_sm_put_blocking(pio, sm, latch_cycles);
-    pio_sm_exec_wait_blocking(pio, sm, pio_encode_pull(false, false));
-    pio_sm_exec_wait_blocking(pio, sm, pio_encode_mov(pio_y, pio_osr));
+    pio_sm_exec(pio, sm, pio_encode_out(pio_y, 32));
+    pio_sm_put(pio, sm, latch_cycles);
     pio_sm_set_enabled(pio, sm, true);
 }
 
