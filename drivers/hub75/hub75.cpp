@@ -172,7 +172,7 @@ void Hub75::start(irq_handler_t handler) {
         hub75_row_program_init(pio, sm_row, row_prog_offs, ROWSEL_BASE_PIN, ROWSEL_N_PINS, pin_stb, latch_cycles);
 
         uint32_t sys_hz = clock_get_hz(clk_sys);  // e.g. 125/200/266 MHz
-        float target_hz = 100000000.0f;            // PIO code fine tuned with a 128 pixel wide setup
+        float target_hz = 125000000.0f;            // PIO code fine tuned with a 128 pixel wide setup
 
         if (width <= 128) {
             target_hz *= 1.0f;
