@@ -47,16 +47,16 @@ uint32_t shiftreg_delay_cycles() {
     return std::max<uint32_t>(8u, (uint32_t)(((uint64_t)system_clock_hz() * 8u + 124999999u) / 125000000u));
 }
 
-float panel_data_clkdiv(uint width) {
+float panel_data_clkdiv(uint panel_width) {
     float target_hz = 125000000.0f;
 
-    if (width <= 128) {
+    if (panel_width <= 128) {
         target_hz *= 1.0f;
     } 
-    else if (width <= 192) {
+    else if (panel_width <= 192) {
         target_hz *= 1.5f;
     } 
-    else if (width <= 256) {
+    else if (panel_width <= 256) {
         target_hz *= 2.0f;
     }
 
@@ -430,7 +430,7 @@ void Hub75::start(irq_handler_t handler) {
             }
         }
 
-        float data_clkdiv = panel_data_clkdiv(width);
+        float data_clkdiv = panel_data_clkdiv(panel_width());
         pio_sm_set_clkdiv(pio, sm_data, data_clkdiv);
         pio_sm_set_clkdiv(pio, sm_row, data_clkdiv);
         if (split_controls) {
