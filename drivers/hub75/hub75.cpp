@@ -394,7 +394,7 @@ void Hub75::start(irq_handler_t handler) {
         if (split_controls) {
             // The range-aware claims above selected a PIO/GPIO-base combination that can see
             // all pins used by both heads, so the extra SMs can now be claimed directly.
-            sm_data_b = pio_claim_unused_sm(pio, true);
+            //sm_data_b = pio_claim_unused_sm(pio, true);
             sm_row_b = pio_claim_unused_sm(pio, true);
         }
 
@@ -415,9 +415,9 @@ void Hub75::start(irq_handler_t handler) {
 
         if (split_controls) {
             if (shift_driver == SHIFT_DRIVER_DP3246) {
-                hub75_data_rgb888_invclk_program_init(pio, sm_data_b, data_prog_offs, DATA_BASE_PIN, pin_clk2);
+                //hub75_data_rgb888_invclk_program_init(pio, sm_data_b, data_prog_offs, DATA_BASE_PIN, pin_clk2);
             } else {
-                hub75_data_rgb888_program_init(pio, sm_data_b, data_prog_offs, DATA_BASE_PIN, pin_clk2);
+                //hub75_data_rgb888_program_init(pio, sm_data_b, data_prog_offs, DATA_BASE_PIN, pin_clk2);
             }
             if (line_decoder == LINE_DECODER_TYPE595) {
                 if (shift_driver == SHIFT_DRIVER_DP3246) {
@@ -434,7 +434,7 @@ void Hub75::start(irq_handler_t handler) {
         pio_sm_set_clkdiv(pio, sm_data, data_clkdiv);
         pio_sm_set_clkdiv(pio, sm_row, data_clkdiv);
         if (split_controls) {
-            pio_sm_set_clkdiv(pio, sm_data_b, data_clkdiv);
+            //pio_sm_set_clkdiv(pio, sm_data_b, data_clkdiv);
             pio_sm_set_clkdiv(pio, sm_row_b, data_clkdiv);
         }
 
@@ -450,8 +450,8 @@ void Hub75::start(irq_handler_t handler) {
             dma_channel_config config_b = dma_channel_get_default_config(dma_channel_b);
             channel_config_set_transfer_data_size(&config_b, DMA_SIZE_32);
             channel_config_set_bswap(&config_b, false);
-            channel_config_set_dreq(&config_b, pio_get_dreq(pio, sm_data_b, true));
-            dma_channel_configure(dma_channel_b, &config_b, &pio->txf[sm_data_b], NULL, 0, false);
+            channel_config_set_dreq(&config_b, pio_get_dreq(pio, sm_data, true));
+            dma_channel_configure(dma_channel_b, &config_b, &pio->txf[sm_data], NULL, 0, false);
         }
 
         irq_add_shared_handler(DMA_IRQ_0, handler, PICO_SHARED_IRQ_HANDLER_DEFAULT_ORDER_PRIORITY);
@@ -467,12 +467,12 @@ void Hub75::start(irq_handler_t handler) {
         if (shift_driver == SHIFT_DRIVER_DP3246) {
             hub75_data_rgb888_invclk_set_shift(pio, sm_data, data_prog_offs, bit);
             if (split_controls) {
-                hub75_data_rgb888_invclk_set_shift(pio, sm_data_b, data_prog_offs, bit);
+                //hub75_data_rgb888_invclk_set_shift(pio, sm_data_b, data_prog_offs, bit);
             }
         } else {
             hub75_data_rgb888_set_shift(pio, sm_data, data_prog_offs, bit);
             if (split_controls) {
-                hub75_data_rgb888_set_shift(pio, sm_data_b, data_prog_offs, bit);
+                //hub75_data_rgb888_set_shift(pio, sm_data_b, data_prog_offs, bit);
             }
         }
 
@@ -514,11 +514,11 @@ void Hub75::stop(irq_handler_t handler) {
             pio_remove_program_and_unclaim_sm(&hub75_data_rgb888_program, pio, sm_data, data_prog_offs);
         }
     }
-    if(split_controls && pio_sm_is_claimed(pio, sm_data_b)) {
-        pio_sm_set_enabled(pio, sm_data_b, false);
-        pio_sm_drain_tx_fifo(pio, sm_data_b);
-        pio_sm_unclaim(pio, sm_data_b);
-    }
+    //if(split_controls && pio_sm_is_claimed(pio, sm_data_b)) {
+    //    pio_sm_set_enabled(pio, sm_data_b, false);
+    //    pio_sm_drain_tx_fifo(pio, sm_data_b);
+    //    pio_sm_unclaim(pio, sm_data_b);
+    //}
 
     if(pio_sm_is_claimed(pio, sm_row)) {
         pio_sm_set_enabled(pio, sm_row, false);
@@ -694,10 +694,10 @@ void Hub75::dma_complete() {
                 }
 
                 for (uint i = 0; i < end_of_row_dummy_pixels(); ++i) {
-                    pio_sm_put_blocking(pio, sm_data_b, 0);
+                    pio_sm_put_blocking(pio, sm_data, 0);
                 }
 
-                hub75_wait_tx_stall(pio, sm_data_b);
+                hub75_wait_tx_stall(pio, sm_data);
 
                 if (!uses_dp3246_type595(*this)) {
                     pio_sm_put_blocking(pio, sm_row_b, encode_row_payload(row, bit));
@@ -713,10 +713,10 @@ void Hub75::dma_complete() {
                     }
                     if (shift_driver == SHIFT_DRIVER_DP3246) {
                         hub75_data_rgb888_invclk_set_shift(pio, sm_data, data_prog_offs, bit);
-                        hub75_data_rgb888_invclk_set_shift(pio, sm_data_b, data_prog_offs, bit);
+                        //hub75_data_rgb888_invclk_set_shift(pio, sm_data_b, data_prog_offs, bit);
                     } else {
                         hub75_data_rgb888_set_shift(pio, sm_data, data_prog_offs, bit);
-                        hub75_data_rgb888_set_shift(pio, sm_data_b, data_prog_offs, bit);
+                        //hub75_data_rgb888_set_shift(pio, sm_data_b, data_prog_offs, bit);
                     }
                 }
 
