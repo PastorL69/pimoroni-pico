@@ -48,7 +48,7 @@ uint32_t shiftreg_delay_cycles() {
 }
 
 float panel_data_clkdiv(uint panel_width) {
-    float target_hz = 125000000.0f;
+    float target_hz = 50000000.0f;
 
     if (panel_width <= 128) {
         target_hz *= 1.0f;
