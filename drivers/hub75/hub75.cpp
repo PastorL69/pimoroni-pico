@@ -797,7 +797,7 @@ void Hub75::dma_complete() {
 
         //if (uses_dp3246_serial_row_decoder(*this)) {
         //    // DP3246/FM6124-style scan timing wants LAT held while the final clocks are still being shifted.
-        //    pio_sm_put_blocking(pio, sm_row, encode_row_payload(row, bit));
+        //pio_sm_put_blocking(pio, sm_row, encode_row_payload(row, bit));
         //}
 
         // Fully flush the pixel shifter before latching the next row.
@@ -953,7 +953,7 @@ Pixel *Hub75::row_buffer_ptr(uint row, uint phase) const {
 uint Hub75::end_of_row_dummy_pixels() const {
     if (uses_dp3246_serial_row_decoder(*this)) {
         // DP3246/FM6124 scan timing driving SM5266P/SM5368PF needs a longer tail so LAT overlaps the final clocks cleanly.
-        return 6;
+        return 2;
     }
     return 2;
 }
