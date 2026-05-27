@@ -111,19 +111,18 @@ pulse_loop:
 .side_set 2
 
 .wrap_target
-    out null, 5 [7]    side 0x3 ; Deassert OEn, discard row select bits
-    out x, 27   [7]    side 0x2 ; Pulse LATCH, get OEn pulse width
+    out null, 5 [1]    side 0x2 ; Deassert OEn, discard row select bits
+    out x, 27   [7]    side 0x3 ; Pulse LATCH, get OEn pulse width
 pulse_loop:
-    jmp x-- pulse_loop side 0x1 ; Assert OEn for x+1 cycles
+    jmp x-- pulse_loop side 0x0 ; Assert OEn for x+1 cycles
 .wrap
-
 
 .program hub75_row_noaddr_dp3246_inverted
 
 .side_set 2
 
 .wrap_target
-    out null, 5 [7]    side 0x3 ; Deassert OEn, discard row select bits
+    out null, 5 [1]    side 0x3 ; Deassert OEn, discard row select bits
     out x, 27   [7]    side 0x2 ; Pulse LATCH, get OEn pulse width
 pulse_loop:
     jmp x-- pulse_loop side 0x1 ; Assert OEn for x+1 cycles
