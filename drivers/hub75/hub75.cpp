@@ -466,7 +466,8 @@ void Hub75::start(irq_handler_t handler) {
                 break;
         }
 
-        uint latch_cycles = latch_cycles_for_system_clock();
+        //uint latch_cycles = latch_cycles_for_system_clock();
+        uint latch_cycles = 20;
 
         if (uses_gpio_serial_decoder(*this)) {
             // GPIO-stepped serial row decoders keep row selection outside the row PIO program.
