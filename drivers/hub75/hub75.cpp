@@ -467,7 +467,7 @@ void Hub75::start(irq_handler_t handler) {
         }
 
         //uint latch_cycles = latch_cycles_for_system_clock();
-        uint latch_cycles = 120;
+        uint latch_cycles = 0;
 
         if (uses_gpio_serial_decoder(*this)) {
             // GPIO-stepped serial row decoders keep row selection outside the row PIO program.
@@ -795,10 +795,10 @@ void Hub75::dma_complete() {
             }
         }
 
-        if (uses_dp3246_serial_row_decoder(*this)) {
-            // DP3246/FM6124-style scan timing wants LAT held while the final clocks are still being shifted.
-            pio_sm_put_blocking(pio, sm_row, encode_row_payload(row, bit));
-        }
+        //if (uses_dp3246_serial_row_decoder(*this)) {
+        //    // DP3246/FM6124-style scan timing wants LAT held while the final clocks are still being shifted.
+        //    pio_sm_put_blocking(pio, sm_row, encode_row_payload(row, bit));
+        //}
 
         // Fully flush the pixel shifter before latching the next row.
         for (uint i = 0; i < end_of_row_dummy_pixels(); ++i) {
@@ -808,10 +808,10 @@ void Hub75::dma_complete() {
         // SM is finished when it stalls on empty TX FIFO
         hub75_wait_tx_stall(pio, sm_data);
 
-        if (!uses_dp3246_serial_row_decoder(*this)) {
-            // Latch row data, pulse output enable for new row.
-            pio_sm_put_blocking(pio, sm_row, encode_row_payload(row, bit));
-        }
+        //if (!uses_dp3246_serial_row_decoder(*this)) {
+        //    // Latch row data, pulse output enable for new row.
+        pio_sm_put_blocking(pio, sm_row, encode_row_payload(row, bit));
+        //}
 
         row++;
 
