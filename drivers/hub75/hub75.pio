@@ -111,25 +111,20 @@ pulse_loop:
 .side_set 2
 
 .wrap_target
-    out null, 5 [1]    side 0x2 ; Deassert OEn, discard row select bits
-    mov x, y    [3]    side 0x3 ; Assert LATCH
-wait_loop_dp:
-    jmp x-- wait_loop_dp side 0x3 ; Hold LATCH while final clocks are sent
-    out x, 27          side 0x2 ; Drop LATCH, get OEn pulse width
+    out null, 5 [7]    side 0x2 ; Deassert OEn, discard row select bits
+    out x, 27   [7]    side 0x3 ; Pulse LATCH, get OEn pulse width
 pulse_loop:
     jmp x-- pulse_loop side 0x0 ; Assert OEn for x+1 cycles
 .wrap
+
 
 .program hub75_row_noaddr_dp3246_inverted
 
 .side_set 2
 
 .wrap_target
-    out null, 5 [1]    side 0x3 ; Deassert OEn, discard row select bits
-    mov x, y    [3]    side 0x2 ; Assert LATCH
-wait_loop_dp:
-    jmp x-- wait_loop_dp side 0x2 ; Hold LATCH while final clocks are sent
-    out x, 27          side 0x3 ; Drop LATCH, get OEn pulse width
+    out null, 5 [7]    side 0x3 ; Deassert OEn, discard row select bits
+    out x, 27   [7]    side 0x2 ; Pulse LATCH, get OEn pulse width
 pulse_loop:
     jmp x-- pulse_loop side 0x1 ; Assert OEn for x+1 cycles
 .wrap
@@ -167,6 +162,7 @@ static inline void hub75_row_noaddr_program_init(PIO pio, uint sm, uint offset, 
 }
 
 static inline void hub75_row_noaddr_dp3246_program_init(PIO pio, uint sm, uint offset, uint latch_base_pin, uint latch_cycles) {
+    (void)latch_cycles;
     pio_sm_set_consecutive_pindirs(pio, sm, latch_base_pin, 2, true);
     pio_gpio_init(pio, latch_base_pin);
     pio_gpio_init(pio, latch_base_pin + 1);
@@ -175,8 +171,6 @@ static inline void hub75_row_noaddr_dp3246_program_init(PIO pio, uint sm, uint o
     sm_config_set_sideset_pins(&c, latch_base_pin);
     sm_config_set_out_shift(&c, true, true, 32);
     pio_sm_init(pio, sm, offset, &c);
-    pio_sm_exec(pio, sm, pio_encode_out(pio_y, 32));
-    pio_sm_put(pio, sm, 16);
     pio_sm_set_enabled(pio, sm, true);
 }
 
