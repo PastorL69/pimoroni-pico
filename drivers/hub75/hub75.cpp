@@ -763,7 +763,7 @@ uint Hub75::panel_width() const {
 }
 
 Pixel *Hub75::row_buffer_ptr(uint row, uint phase) const {
-    return &render_back_buffer[row * width * 2 + phase * panel_width() * 2];
+    return &render_back_buffer[(row * width * 2 + phase * panel_width() * 2) + 1];
 }
 
 uint Hub75::end_of_row_dummy_pixels() const {
