@@ -209,7 +209,7 @@ class Hub75 {
     unsigned int pin_oe2 = HUB75_OE2;    // Output Enable for panel 2
     bool split_controls = false;
 
-    const bool clk_polarity = 1;
+    const bool clk_polarity = 0;
     const bool stb_polarity = 1;
     const bool oe_polarity = 0;
 
